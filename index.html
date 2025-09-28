@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6th Grade Homi Bhabha Test</title>
+<style>
+/* --- BASE & MOBILE-FIRST STYLES --- */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: #e0f7fa; 
+    margin:0; 
+    padding: 10px; /* Add padding for small screens */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top for better content visibility */
+    min-height: 100vh;
+}
+.container { 
+    max-width: 900px; 
+    width: 100%; /* Use full width on mobile */
+    margin: 10px auto; /* Reduced margin for mobile */
+    background: #fff; 
+    padding: 15px; /* Reduced padding for mobile */
+    border-radius: 15px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+h1 { 
+    text-align: center; 
+    color: #00796b;
+    font-size: 1.5em; /* Smaller font for mobile header */
+    margin-bottom: 10px;
+}
+#timer { 
+    text-align: right; 
+    font-weight: bold; 
+    font-size: 1.1em; /* Adjusted size */
+    color: #d32f2f;
+    margin-bottom: 10px;
+}
+#progress {
+    text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+    color: #0288d1;
+    font-size: 0.9em;
+}
+#chapter { 
+    font-size: 1.2em; /* Adjusted size */
+    font-weight:bold; 
+    text-align:center; 
+    color:#d32f2f; 
+    margin-bottom: 10px;
+}
+#question { 
+    font-size: 1.1em; /* Adjusted size */
+    margin-bottom: 15px;
+    padding: 10px;
+    border-left: 5px solid #00796b;
+    background-color: #f1f8e9;
+    border-radius: 5px;
+}
+.options { 
+    list-style: none; 
+    padding: 0;
+}
+.options li { 
+    margin-bottom: 8px; /* Reduced margin */
+}
+.options label {
+    display: flex; /* Use flexbox for better alignment */
+    align-items: center;
+    padding: 10px; /* Reduced padding */
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    font-size: 1em;
+    -webkit-tap-highlight-color: transparent; /* Improve tap feedback on mobile */
+}
+.options label:hover {
+    background: #e0e0e0;
+    border-color: #00796b;
+}
+.options input[type="radio"] {
+    margin-right: 10px;
+    flex-shrink: 0; /* Prevent radio button from shrinking */
+}
+
+/* BUTTON STYLES */
+#submitBtn, #nextBtn { 
+    width: 100%; /* Full width buttons for easy tapping */
+    padding: 12px 25px; /* Larger tap target */
+    font-size: 1.1em; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    margin-top: 15px;
+    box-sizing: border-box;
+    transition: background 0.3s, transform 0.1s;
+}
+#submitBtn { 
+    background: #0288d1; 
+    color: #fff;
+}
+#submitBtn:active, #nextBtn:active {
+    transform: scale(0.98); /* Visual feedback on tap */
+}
+#submitBtn:hover {
+    background: #01579b;
+}
+#nextBtn { 
+    background: #388e3c; 
+    color: #fff; 
+    display: none;
+    margin-left: 0; /* Remove left margin on mobile */
+}
+#nextBtn:hover {
+    background: #2e7d32;
+}
+
+/* FEEDBACK & RESULT STYLES */
+#feedback { 
+    margin-top: 15px; 
+    font-weight: bold; 
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+.correct {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #388e3c;
+}
+.incorrect {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+}
+#result { 
+    text-align: center; 
+    font-size: 1.8em; /* Adjusted size */
+    font-weight: bold;
+    color: #00796b; 
+    display: none;
+    padding: 20px;
+    border: 3px dashed #00796b;
+    border-radius: 10px;
+}
+
+/* --- DESKTOP/TABLET OPTIMIZATION (min-width: 600px) --- */
+@media (min-width: 600px) {
+    body {
+        padding: 0;
+        align-items: center; /* Center vertically on larger screens */
+    }
+    .container { 
+        margin: 30px auto; 
+        padding: 25px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    #timer {
+        font-size: 1.2em;
+    }
+    #question { 
+        font-size: 1.25em; 
+    }
+    .options label {
+        padding: 12px;
+        font-size: 1.1em;
+    }
+    #submitBtn, #nextBtn {
+        width: auto; /* Buttons don't need full width */
+        margin-top: 20px;
+    }
+    #nextBtn {
+        margin-left: 10px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>6th Grade Homi Bhabha Test</h1>
+<div id="timer">Time Left: 01:30:00</div>
+<div id="progress">Question 1 of 88</div>
+<div id="chapter"></div>
+<div id="question-container">
+    <div id="question"></div>
+    <ul class="options" id="options"></ul>
+    <button id="submitBtn" onclick="submitAnswer()">Submit</button>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+    <div id="feedback"></div>
+</div>
+<div id="result"></div>
+</div>
+
+<script>
+// --- QUIZ DATA ---
+const questions = [
+/* Chemistry - Water 30 */
+{chapter:"Chemistry - Water",q:"What is the chemical formula of water?",a:["H2O","CO2","O2","H2"],correct:0},
+{chapter:"Chemistry - Water",q:"Which process converts water into vapour?",a:["Evaporation","Condensation","Freezing","Precipitation"],correct:0},
+{chapter:"Chemistry - Water",q:"Largest source of water on Earth?",a:["Oceans","Rivers","Lakes","Ponds"],correct:0},
+{chapter:"Chemistry - Water",q:"Process by which clouds cause rain?",a:["Condensation","Evaporation","Transpiration","Freezing"],correct:0},
+{chapter:"Chemistry - Water",q:"Term for movement of water between land and air?",a:["Water cycle","Evaporation","Condensation","Precipitation"],correct:0},
+{chapter:"Chemistry - Water",q:"Main reason for droughts?",a:["Lack of rainfall","Too much rain","Floods","Storms"],correct:0},
+{chapter:"Chemistry - Water",q:"Process by which water is lost from plants?",a:["Transpiration","Respiration","Evaporation","Condensation"],correct:0},
+{chapter:"Chemistry - Water",q:"Process of water turning into ice?",a:["Freezing","Melting","Boiling","Condensation"],correct:0},
+{chapter:"Chemistry - Water",q:"Process of water turning into steam?",a:["Boiling","Freezing","Melting","Condensation"],correct:0},
+{chapter:"Chemistry - Water",q:"Which state of water has fixed shape and volume?",a:["Solid","Liquid","Gas","Plasma"],correct:0},
+{chapter:"Chemistry - Water",q:"Which state has fixed volume but no fixed shape?",a:["Liquid","Solid","Gas","Plasma"],correct:0},
+{chapter:"Chemistry - Water",q:"Which state has neither fixed shape nor volume?",a:["Gas","Solid","Liquid","Plasma"],correct:0},
+{chapter:"Chemistry - Water",q:"Process converts water vapour into liquid?",a:["Condensation","Evaporation","Transpiration","Freezing"],correct:0},
+{chapter:"Chemistry - Water",q:"Rainwater soaking into the ground is called?",a:["Infiltration","Evaporation","Condensation","Transpiration"],correct:0},
+{chapter:"Chemistry - Water",q:"Water moving from oceans to atmosphere?",a:["Evaporation","Condensation","Transpiration","Precipitation"],correct:0},
+{chapter:"Chemistry - Water",q:"Form of water in glaciers?",a:["Solid","Liquid","Gas","Plasma"],correct:0},
+{chapter:"Chemistry - Water",q:"What is precipitation?",a:["Rainfall","Evaporation","Condensation","Transpiration"],correct:0},
+{chapter:"Chemistry - Water",q:"Process of water changing from solid to liquid?",a:["Melting","Freezing","Evaporation","Condensation"],correct:0},
+{chapter:"Chemistry - Water",q:"Water changing from liquid to solid?",a:["Freezing","Melting","Evaporation","Condensation"],correct:0},
+{chapter:"Chemistry - Water",q:"Water changing from liquid to vapour?",a:["Evaporation","Condensation","Freezing","Melting"],correct:0},
+{chapter:"Chemistry - Water",q:"Water changing from vapour to liquid?",a:["Condensation","Evaporation","Freezing","Melting"],correct:0},
+{chapter:"Chemistry - Water",q:"Loss of water by leaves?",a:["Transpiration","Evaporation","Condensation","Precipitation"],correct:0},
+{chapter:"Chemistry - Water",q:"Source of freshwater on Earth?",a:["Rivers","Oceans","Sea","Glaciers"],correct:0},
+{chapter:"Chemistry - Water",q:"Water in oceans is mainly?",a:["Salty","Fresh","Mineral","Distilled"],correct:0},
+{chapter:"Chemistry - Water",q:"Water essential for life?",a:["Yes","No","Sometimes","Never"],correct:0},
+{chapter:"Chemistry - Water",q:"Water in clouds is in which state?",a:["Gas","Liquid","Solid","Plasma"],correct:1},
+{chapter:"Chemistry - Water",q:"Water in rivers is mainly?",a:["Fresh","Salty","Mineral","Boiling"],correct:0},
+{chapter:"Chemistry - Water",q:"Which process is part of water cycle?",a:["Evaporation","Photosynthesis","Respiration","Digestion"],correct:0},
+{chapter:"Chemistry - Water",q:"Condensation occurs due to?",a:["Cooling","Heating","Freezing","Melting"],correct:0},
+{chapter:"Chemistry - Water",q:"Water in lakes is mainly?",a:["Fresh","Salty","Boiling","Evaporation"],correct:0},
+
+/* Respiration & Circulation 30 */
+{chapter:"Respiration",q:"Process by which cells obtain energy from food?",a:["Respiration","Photosynthesis","Digestion","Circulation"],correct:0},
+{chapter:"Respiration",q:"Gas humans inhale for respiration?",a:["Carbon dioxide","Oxygen","Nitrogen","Hydrogen"],correct:1},
+{chapter:"Respiration",q:"Gas humans exhale?",a:["Oxygen","Carbon dioxide","Nitrogen","Hydrogen"],correct:1},
+{chapter:"Respiration",q:"Primary organ for gas exchange?",a:["Heart","Lungs","Brain","Kidney"],correct:1},
+{chapter:"Respiration",q:"Tiny air sacs in lungs?",a:["Alveoli","Bronchi","Trachea","Diaphragm"],correct:0},
+{chapter:"Respiration",q:"Tube connecting throat to lungs?",a:["Bronchi","Trachea","Alveoli","Esophagus"],correct:1},
+{chapter:"Respiration",q:"Process of breathing in?",a:["Exhalation","Inhalation","Respiration","Circulation"],correct:1},
+{chapter:"Respiration",q:"Process of breathing out?",a:["Inhalation","Exhalation","Respiration","Circulation"],correct:1},
+{chapter:"Respiration",q:"Muscle that helps in breathing?",a:["Heart","Diaphragm","Stomach","Brain"],correct:1},
+{chapter:"Respiration",q:"Smaller branches of bronchi inside lungs?",a:["Bronchioles","Alveoli","Trachea","Diaphragm"],correct:0},
+{chapter:"Respiration",q:"Respiration releasing energy in presence of oxygen?",a:["Aerobic","Anaerobic","Photosynthesis","Fermentation"],correct:0},
+{chapter:"Respiration",q:"Respiration releasing energy without oxygen?",a:["Aerobic","Anaerobic","Photosynthesis","Fermentation"],correct:1},
+{chapter:"Respiration",q:"By-product of anaerobic respiration?",a:["Water","Lactic acid","Oxygen","Carbon dioxide"],correct:1},
+{chapter:"Respiration",q:"Process of gas exchange in lungs?",a:["External respiration","Internal respiration","Photosynthesis","Transpiration"],correct:0},
+{chapter:"Respiration",q:"Gas plants release during photosynthesis?",a:["Oxygen","Carbon dioxide","Nitrogen","Hydrogen"],correct:0},
+{chapter:"Respiration",q:"Organ filtering dust from air?",a:["Nose","Lungs","Trachea","Alveoli"],correct:0},
+{chapter:"Respiration",q:"Fluid carrying gases in blood?",a:["Blood","Lymph","Water","Saliva"],correct:0},
+{chapter:"Circulation",q:"Organ pumping blood?",a:["Heart","Lungs","Kidney","Brain"],correct:0},
+{chapter:"Circulation",q:"Vessels carrying blood away from heart?",a:["Arteries","Veins","Capillaries","Lymph"],correct:0},
+{chapter:"Circulation",q:"Vessels carrying blood to heart?",a:["Arteries","Veins","Capillaries","Lymph"],correct:1},
+{chapter:"Circulation",q:"Tiny blood vessels for gas/nutrient exchange?",a:["Capillaries","Arteries","Veins","Lymph"],correct:0},
+{chapter:"Circulation",q:"Component of blood helping clot?",a:["Platelets","Red cells","White cells","Plasma"],correct:0},
+{chapter:"Circulation",q:"Component carrying oxygen?",a:["Red cells","White cells","Platelets","Plasma"],correct:0},
+{chapter:"Circulation",q:"Component fighting infections?",a:["White cells","Red cells","Platelets","Plasma"],correct:0},
+{chapter:"Circulation",q:"Liquid part of blood?",a:["Plasma","Red cells","White cells","Platelets"],correct:0},
+{chapter:"Circulation",q:"Circuit carrying blood from heart to lungs?",a:["Pulmonary","Systemic","Coronary","Neural"],correct:0},
+{chapter:"Circulation",q:"Circuit carrying blood from heart to body?",a:["Systemic","Pulmonary","Coronary","Neural"],correct:0},
+{chapter:"Circulation",q:"Process of blood flowing?",a:["Circulation","Respiration","Photosynthesis","Digestion"],correct:0},
+{chapter:"Circulation",q:"Process of blood clotting?",a:["Coagulation","Respiration","Photosynthesis","Transpiration"],correct:0},
+
+/* Nervous System 30 */
+{chapter:"Nervous System",q:"Main control center of body?",a:["Brain","Heart","Lungs","Liver"],correct:0},
+{chapter:"Nervous System",q:"Long fiber carrying messages from brain?",a:["Neuron","Spinal cord","Axon","Dendrite"],correct:1},
+{chapter:"Nervous System",q:"Cells of nervous system?",a:["Neurons","Muscles","Red blood cells","Platelets"],correct:0},
+{chapter:"Nervous System",q:"Neuron part that receives messages?",a:["Axon","Dendrite","Cell body","Synapse"],correct:1},
+{chapter:"Nervous System",q:"Neuron part sending messages?",a:["Axon","Dendrite","Cell body","Synapse"],correct:0},
+{chapter:"Nervous System",q:"Gap between neurons?",a:["Synapse","Axon","Dendrite","Neuron"],correct:0},
+{chapter:"Nervous System",q:"System controlling voluntary actions?",a:["Autonomic","Somatic","Central","Peripheral"],correct:1},
+{chapter:"Nervous System",q:"System controlling involuntary actions?",a:["Autonomic","Somatic","Central","Peripheral"],correct:0},
+{chapter:"Nervous System",q:"Part of brain controlling balance?",a:["Cerebrum","Cerebellum","Medulla","Pons"],correct:1},
+{chapter:"Nervous System",q:"Part controlling thinking/memory?",a:["Cerebrum","Cerebellum","Medulla","Pons"],correct:0},
+{chapter:"Nervous System",q:"Part controlling heartbeat/breathing?",a:["Medulla","Cerebrum","Cerebellum","Pons"],correct:0},
+{chapter:"Nervous System",q:"Nerve carrying messages from eye?",a:["Optic nerve","Auditory nerve","Vagus nerve","Spinal nerve"],correct:0},
+{chapter:"Nervous System",q:"Nerve carrying messages from ear?",a:["Auditory nerve","Optic nerve","Vagus nerve","Spinal nerve"],correct:0},
+{chapter:"Nervous System",q:"Protective covering of brain/spinal cord?",a:["Meninges","Skull","Vertebra","Plasma"],correct:0},
+{chapter:"Nervous System",q:"Fluid cushioning brain/spinal cord?",a:["Cerebrospinal fluid","Blood","Lymph","Saliva"],correct:0},
+{chapter:"Nervous System",q:"Disease caused by spinal cord damage?",a:["Paralysis","Asthma","Diabetes","Tuberculosis"],correct:0},
+{chapter:"Nervous System",q:"System sending signals via electrical impulses?",a:["Nervous","Circulatory","Respiratory","Digestive"],correct:0},
+{chapter:"Nervous System",q:"Rapid automatic response to stimulus?",a:["Reflex","Reaction","Action","Response"],correct:0},
+{chapter:"Nervous System",q:"Nerve controlling muscles in arm?",a:["Motor nerve","Sensory nerve","Spinal nerve","Vagus nerve"],correct:0},
+{chapter:"Nervous System",q:"Nerve carrying messages from the skin to the brain?",a:["Sensory nerve","Motor nerve","Spinal nerve","Vagus nerve"],correct:0},
+{chapter:"Nervous System",q:"Largest part of the brain?",a:["Cerebrum","Cerebellum","Medulla","Pons"],correct:0},
+{chapter:"Nervous System",q:"Part connecting left and right hemispheres?",a:["Corpus callosum","Cerebrum","Medulla","Cerebellum"],correct:0},
+{chapter:"Nervous System",q:"Part of neuron containing the nucleus?",a:["Cell body","Axon","Dendrite","Synapse"],correct:0},
+{chapter:"Nervous System",q:"Disease causing shaking of hands?",a:["Parkinson's disease","Alzheimer's","Epilepsy","Polio"],correct:0},
+{chapter:"Nervous System",q:"Nerve controlling heart, lungs, digestive organs?",a:["Vagus nerve","Optic nerve","Auditory nerve","Motor nerve"],correct:0},
+{chapter:"Nervous System",q:"Part of nervous system outside brain and spinal cord?",a:["Peripheral nervous system","Central nervous system","Autonomic nervous system","Somatic nervous system"],correct:0},
+{chapter:"Nervous System", q:"Junction where neuron connects to a muscle?", a:["Neuromuscular junction","Synapse","Axon terminal","Dendrite"], correct:0},
+{chapter:"Nervous System", q:"Condition caused by nerve damage?", a:["Neuropathy","Paralysis","Asthma","Anemia"], correct:0}
+];
+
+// --- QUIZ LOGIC (SAME AS BEFORE) ---
+let currentQuestionIndex = 0;
+let score = 0;
+let timeRemaining = 5400; // 1 hour 30 minutes in seconds (90 * 60)
+let timerInterval;
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        const hours = Math.floor(timeRemaining / 3600);
+        const minutes = Math.floor((timeRemaining % 3600) / 60);
+        const seconds = timeRemaining % 60;
+
+        const timeString = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        
+        document.getElementById('timer').textContent = `Time Left: ${timeString}`;
+
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = "Time's Up!";
+            endQuiz(true); // End quiz on timeout
+        }
+    }, 1000);
+}
+
+function loadQuestion() {
+    if (currentQuestionIndex >= questions.length) {
+        endQuiz(false);
+        return;
+    }
+
+    const q = questions[currentQuestionIndex];
+    document.getElementById('chapter').textContent = `${q.chapter}`;
+    document.getElementById('question').textContent = `Q${currentQuestionIndex + 1}. ${q.q}`;
+    document.getElementById('progress').textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+    
+    const optionsList = document.getElementById('options');
+    optionsList.innerHTML = ''; // Clear previous options
+    document.getElementById('feedback').innerHTML = '';
+    document.getElementById('feedback').className = '';
+    document.getElementById('submitBtn').style.display = 'inline-block';
+    document.getElementById('nextBtn').style.display = 'none';
+
+    q.a.forEach((option, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            <label>
+                <input type="radio" name="answer" value="${index}">
+                ${option}
+            </label>
+        `;
+        optionsList.appendChild(listItem);
+    });
+}
+
+function submitAnswer() {
+    const selectedOption = document.querySelector('input[name="answer"]:checked');
+    const feedbackDiv = document.getElementById('feedback');
+    const q = questions[currentQuestionIndex];
+    
+    if (!selectedOption) {
+        feedbackDiv.className = 'incorrect';
+        feedbackDiv.textContent = 'Please select an answer.';
+        return;
+    }
+
+    const selectedIndex = parseInt(selectedOption.value);
+    
+    // Disable all radio buttons after submission
+    document.querySelectorAll('input[name="answer"]').forEach(radio => radio.disabled = true);
+    
+    if (selectedIndex === q.correct) {
+        score++;
+        feedbackDiv.className = 'correct';
+        feedbackDiv.textContent = 'Correct Answer! 🎉';
+    } else {
+        feedbackDiv.className = 'incorrect';
+        feedbackDiv.textContent = `Incorrect. The correct answer is: ${q.a[q.correct]}`;
+    }
+
+    // Highlight the correct answer
+    const correctLabel = document.querySelector(`input[value="${q.correct}"]`).parentNode;
+    correctLabel.style.backgroundColor = '#c8e6c9'; 
+    correctLabel.style.borderColor = '#388e3c';
+
+    // Highlight the incorrect selection if it was made
+    if (selectedIndex !== q.correct) {
+        const incorrectLabel = selectedOption.parentNode;
+        incorrectLabel.style.backgroundColor = '#ffcdd2';
+        incorrectLabel.style.borderColor = '#d32f2f';
+    }
+
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    loadQuestion();
+}
+
+function endQuiz(timedOut) {
+    clearInterval(timerInterval);
+    const resultDiv = document.getElementById('result');
+    const totalQuestions = questions.length;
+    const percentage = ((score / totalQuestions) * 100).toFixed(2);
+    
+    document.getElementById('question-container').style.display = 'none';
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('progress').style.display = 'none';
+    
+    let message = timedOut ? "TIME'S UP! Your Score:" : "Test Completed! Your Score:";
+    
+    resultDiv.innerHTML = `
+        ${message}<br>
+        ${score} / ${totalQuestions}<br>
+        (${percentage}%)
+    `;
+    resultDiv.style.display = 'block';
+}
+
+// Initialize the quiz when the page loads
+window.onload = () => {
+    loadQuestion();
+    startTimer();
+};
+</script>
+</body>
+</html>
